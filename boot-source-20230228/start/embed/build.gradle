@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+}
+
+group = 'hello'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //스프링 MVC 추가
+    implementation 'org.springframework:spring-webmvc:6.0.4'
+
+    //내장 톰켓 추가
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.5'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// 라이브러리 생성해주지 않음
+//일반 Jar 생성
+task buildJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'hello.embed.EmbedTomcatSpringMain'
+    }
+    with jar
+}
+
+// 라이브러리들을 클래스파일로 뽑아서 새로만드는 jar에 추가함
+//Fat Jar 생성
+task buildFatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'hello.embed.EmbedTomcatSpringMain'
+    }
+    // 파일명이 중복되었을 때 전략
+    duplicatesStrategy = DuplicatesStrategy.WARN
+    // 라이브러리를 다 풀어서 클래스로 뽑아서 jar에 추가해주겠다.
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
