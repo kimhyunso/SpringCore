@@ -28,7 +28,7 @@ public class CommandLineV2 {
 
         }
 
-
+        // 옵션인수는 하나의 키에 여러 값을 포함 할 수 있음 command-line-option-info
         List<String> url = appArguments.getOptionValues("url");
         List<String> username = appArguments.getOptionValues( "username");
         List<String> password = appArguments.getOptionValues("password");
